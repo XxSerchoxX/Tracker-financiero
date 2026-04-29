@@ -258,12 +258,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',sans-
         <circle cx="60" cy="60" r="48" fill="none" stroke="#94a3b8" stroke-width="18" stroke-dasharray="301.6" stroke-dashoffset="301.6" id="d-vid" transform="rotate(-90 60 60)" style="transition:stroke-dashoffset .6s .2s"/>
         <!-- Fondos 200 13.8% -->
         <circle cx="60" cy="60" r="48" fill="none" stroke="#d97706" stroke-width="18" stroke-dasharray="301.6" stroke-dashoffset="301.6" id="d-fon" transform="rotate(-90 60 60)" style="transition:stroke-dashoffset .6s .3s"/>
-        <text x="60" y="55" text-anchor="middle" font-size="13" font-weight="800" fill="#0d0e14" font-family="-apple-system,sans-serif">1.450€</text>
+        <text x="60" y="55" text-anchor="middle" font-size="13" font-weight="800" fill="#0d0e14" font-family="-apple-system,sans-serif">1.442€</text>
         <text x="60" y="70" text-anchor="middle" font-size="9" fill="#a0a6b8" font-family="-apple-system,sans-serif">mensuales</text>
       </svg>
       <div class="donut-legend">
         <div class="legend-item"><div class="legend-dot" style="background:#4f46e5"></div><span class="legend-name">ETFs TR</span><span class="legend-val">400€<span class="legend-pct">28%</span></span></div>
-        <div class="legend-item"><div class="legend-dot" style="background:#16a34a"></div><span class="legend-name">Ahorro TR</span><span class="legend-val">600€<span class="legend-pct">41%</span></span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:#16a34a"></div><span class="legend-name">Ahorro TR</span><span class="legend-val">550€<span class="legend-pct">38%</span></span></div>
         <div class="legend-item"><div class="legend-dot" style="background:#94a3b8"></div><span class="legend-name">Vida diaria</span><span class="legend-val">250€<span class="legend-pct">17%</span></span></div>
         <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div><span class="legend-name">Fondos</span><span class="legend-val">200€<span class="legend-pct">14%</span></span></div>
       </div>
@@ -272,7 +272,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',sans-
 
   <!-- Stats row -->
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px">
-    <div class="stat-card"><div class="stat-label">Gastado</div><div class="stat-val" id="stat-gasto">0€</div><div class="stat-sub" id="stat-mes">Abril 2026</div></div>
+    <div class="stat-card"><div class="stat-label">Gastado</div><div class="stat-val" id="stat-gasto">0€</div><div class="stat-sub" id="stat-mes">Mayo 2026</div></div>
     <div class="stat-card"><div class="stat-label">Disponible</div><div class="stat-val" id="stat-disp" style="color:var(--green)">250€</div><div class="stat-sub">de 250€</div></div>
     <div class="stat-card" style="text-align:center"><div class="stat-label">Racha 🔥</div><div class="stat-val" id="streak-num" style="color:var(--accent)">0</div><div class="stat-sub" id="streak-sub">meses</div></div>
   </div>
@@ -516,7 +516,7 @@ var cc={
 var state={
   exps:[],eid:0,historial:[],colchon:0,
   fondos:{coche:0,pareja:0,viaje:0,caprichos:0},
-  cartera:{ftse:455,gold:730,em:38,fidelity:448,btc:316,fecha:''}
+  cartera:{ftse:777,gold:810,em:107,fidelity:482,btc:344,fecha:'29/4/2026'}
 };
 var svt=null,modalFondo=null,modalOp=null;
 
@@ -525,7 +525,6 @@ function fmtd(n){return parseFloat(n).toFixed(2).replace('.',',');}
 function mesNombre(){
   var m=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
   var d=new Date(),mes=d.getMonth(),anyo=d.getFullYear();
-  if(anyo===2026&&mes===2)return 'Abril 2026';
   return m[mes]+' '+anyo;
 }
 
@@ -694,7 +693,7 @@ function addExp(){
 function delExp(i){state.exps=state.exps.filter(function(e){return e.i!==i});cloudSave();renderExps();renderPiggy();renderCatTotals();}
 function renderExps(){
   var tot=state.exps.reduce(function(s,e){return s+e.a},0);
-  var bud=250,pct=Math.min(tot/bud*100,100),rem=bud-tot;
+  var bud=300,pct=Math.min(tot/bud*100,100),rem=bud-tot;
   var col=pct>90?'var(--red)':pct>70?'var(--amber)':'var(--green)';
   var sg=document.getElementById('stat-gasto');if(sg)sg.textContent=fmt(tot)+'€';
   var sm=document.getElementById('stat-mes');if(sm)sm.textContent=mesNombre();
@@ -722,7 +721,7 @@ function renderExps(){
 function confirmarCierre(){
   // Show resumen first
   var tot=state.exps.reduce(function(s,e){return s+e.a},0);
-  var bud=250,sob=bud-tot,ok=sob>=0;
+  var bud=300,sob=bud-tot,ok=sob>=0;
   // Build cat totals
   var cats={};
   state.exps.forEach(function(e){cats[e.c]=(cats[e.c]||0)+e.a;});
@@ -749,11 +748,14 @@ function confirmarCierre(){
 }
 function confirmarCierreReal(){
   var tot=state.exps.reduce(function(s,e){return s+e.a},0);
-  var ok=tot<=250;
+  var ok=tot<=300;
   var prevStreak=state.streak||0;
   state.streak=ok?prevStreak+1:0;
-  state.historial.unshift({mes:mesNombre(),exps:state.exps.slice(),total:tot,presupuesto:250,fecha:new Date().toISOString()});
+  state.historial.unshift({mes:mesNombre(),exps:state.exps.slice(),total:tot,presupuesto:300,fecha:new Date().toISOString()});
   state.exps=[];state.eid=0;
+  // Reset quincenas for new month
+  state.cartera.ultimaAport1=null;
+  state.cartera.ultimaAport2=null;
   document.getElementById('modal-resumen').classList.remove('open');
   if(!ok&&prevStreak>0)showCelebration('💔😢','Racha de '+prevStreak+' meses rota...');
   else if(ok&&state.streak===3)showCelebration('🔥🔥🔥','¡3 meses seguidos sin pasarte! 🏆');
