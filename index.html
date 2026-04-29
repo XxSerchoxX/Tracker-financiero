@@ -754,8 +754,8 @@ function confirmarCierreReal(){
   state.historial.unshift({mes:mesNombre(),exps:state.exps.slice(),total:tot,presupuesto:300,fecha:new Date().toISOString()});
   state.exps=[];state.eid=0;
   // Reset quincenas for new month
-  state.cartera.ultimaAport1=null;
-  state.cartera.ultimaAport2=null;
+  state.cartera.ultimaAport1='reset';
+  state.cartera.ultimaAport2='reset';
   document.getElementById('modal-resumen').classList.remove('open');
   if(!ok&&prevStreak>0)showCelebration('💔😢','Racha de '+prevStreak+' meses rota...');
   else if(ok&&state.streak===3)showCelebration('🔥🔥🔥','¡3 meses seguidos sin pasarte! 🏆');
@@ -984,12 +984,20 @@ function renderCartera(){
   var ahora=new Date(),mesKey=ahora.getFullYear()+'-'+(ahora.getMonth()+1);
   var h1=state.cartera.ultimaAport1===mesKey,h2=state.cartera.ultimaAport2===mesKey;
   var b1=document.getElementById('aport-btn1'),b2=document.getElementById('aport-btn2'),est=document.getElementById('aport-estado');
-  if(b1){b1.style.background=h1?'var(--green)':'var(--accent)';b1.textContent=h1?'✓ 1ª quincena':'1ª quincena';}
-  if(b2){b2.style.background=h2?'var(--green)':'var(--accent)';b2.textContent=h2?'✓ 2ª quincena':'2ª quincena';}
+  if(b1){
+    b1.style.background=h1?'var(--green)':'var(--accent)';
+    b1.style.opacity=h1?'1':'1';
+    b1.textContent=h1?'✓ 1ª quincena':'1ª quincena';
+  }
+  if(b2){
+    b2.style.background=h2?'var(--green)':'var(--accent)';
+    b2.style.opacity=h2?'1':'1';
+    b2.textContent=h2?'✓ 2ª quincena':'2ª quincena';
+  }
   if(est){
     if(h1&&h2){est.textContent='✓ Mes completo';est.style.color='var(--green)';}
     else if(h1||h2){est.textContent='1 de 2 quincenas';est.style.color='var(--amber)';}
-    else{est.textContent='Pendientes: 2 quincenas';est.style.color='var(--text3)';}
+    else{est.textContent='Pendientes este mes';est.style.color='var(--text3)';}
   }
 }
 
